@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script type="text/javascript">
+    var Screen = {
+        designWidth: 1920, // 设计稿屏幕宽度
+        designHeight: 1080, // 设计稿屏幕高度
+        minHeight: 620, // laptop高度
+        resize() {
+            document.documentElement.style.fontSize = (document.documentElement.clientWidth / 19.2) + "px";
+        }
+    };
+    Screen.resize();
+
+    /**
+     * 节流和防抖结合在一起
+     * @param {*} fn 需要包装起来的回调函数
+     * @param {*} delay 延迟时间
+     */
+    function throttle(fn, delay) {
+        /**
+         * last为上一次触发的时间； timer为定时器
+         * @type {number}
+         */
+        var last = 0,
+            timer = null;
+
+        /**
+         * 将throttle的处理结果当做函数进行回调
+         */
+        return function() {
+            /**
+             * 保留调用的上下文
+             */
+            var context = this;
+
+            /**
+             * 保留传递过来的参数
+             * @type {IArguments}
+             */
+            var args = arguments;
+
+            /**
+             * 记录本次触发回调的时间
+             * @type {number}
+             */
+            var now = +new Date();
+
+            /**
+             * 判断上次触发的时间和本次触发的时间间隔是否大于时间阈值
+             */
+            if (now - last < delay) {
+                /**
+                 * 如果小于时间间隔阈值，就重新设置一个定时器
+                 */
+                clearTimeout(timer);
+
+                timer = setTimeout(function() {
+                    last = now;
+                    fn.apply(context, args);
+                }, delay);
+            } else {
+                /**
+                 * 如果时间超出了我们设定的时间，那就不等了，无论如何也要给用户一个反馈
+                 * @type {number}
+                 */
+                last = now;
+                fn.apply(context, args);
+            }
+        }
+    }
+
+    addEventListener("resize", throttle(Screen.resize, 200), false);
+
+    var commonSetting = {
+        baseUrl: "http://47.97.116.47:8009",
+        title: "文件大数据管理系统",
+    };
+    </script>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+</html>

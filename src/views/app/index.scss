@@ -1,0 +1,13 @@
+.v-container {
+    @include size();
+    position: relative;
+    > nav {
+        @include size(100%,0.32rem);
+        line-height: 0.32rem;
+        position: relative;
+        text-align: center;
+        a {
+            padding: 0 0.1rem;
+        }
+    }
+}
